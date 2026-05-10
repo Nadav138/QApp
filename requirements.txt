@@ -6,3 +6,4 @@ yfinance>=0.2.58
 matplotlib>=3.8.4
 seaborn>=0.13.2
 pylatexenc>=2.10
+cvxpy>=1.4.0
