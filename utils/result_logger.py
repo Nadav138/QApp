@@ -41,7 +41,15 @@ def log_run(
     os.makedirs(results_dir, exist_ok=True)
 
     timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    run_id = f"run_{timestamp}"
+    
+    # Inductive naming: count, top 3 tickers, n_clk, adaptive/static
+    num_assets = len(assets)
+    top_tickers = "-".join(sorted(assets)[:3])
+    plus_suffix = "-plus" if num_assets > 3 else ""
+    n_clk = config.get("quantum_hhl_n_clk", 6)
+    adaptive = "adaptive" if config.get("quantum_ipm_use_adaptive_step", False) else "static"
+    
+    run_id = f"run_{num_assets}ast_{top_tickers}{plus_suffix}_{n_clk}clk_{adaptive}_{timestamp}"
 
     run_log = {
         "run_id": run_id,
