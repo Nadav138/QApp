@@ -1,0 +1,56 @@
+Yes. That is better for a very short task.
+
+Use this:
+
+Task markdown
+
+### Task 1 — Run the HHL-style solver
+Use the configured number of clock qubits, run the HHL-style solver once, and visualize the resulting circuit.
+
+Code skeleton
+
+# TODO: get the number of clock qubits from the config
+n_clk_demo = ...
+# TODO: run the HHL-style solver
+dz_hhl = quantum_newton_solver(
+    K_eq,
+    rhs_eq,
+    n_clk=n_clk_demo,
+    pad_eig=CONFIG["quantum_hhl_pad_eig"]
+)
+w_hhl_raw = dz_hhl[:n]
+print(f"Circuit depth: {last_qc.depth()} | gates: {last_qc.size()}")
+# TODO: draw the circuit
+...
+
+Hint markdown
+
+<details>
+<summary>Hint</summary>
+The number of clock qubits is stored in:
+```python
+CONFIG["quantum_hhl_n_clk"]
+
+To draw the latest circuit, use:
+
+last_qc.draw(...)
+</details>
+```
+
+Solution markdown
+
+<details>
+<summary>Solution</summary>
+```python
+n_clk_demo = CONFIG["quantum_hhl_n_clk"]
+dz_hhl = quantum_newton_solver(
+    K_eq,
+    rhs_eq,
+    n_clk=n_clk_demo,
+    pad_eig=CONFIG["quantum_hhl_pad_eig"]
+)
+w_hhl_raw = dz_hhl[:n]
+print(f"Circuit depth: {last_qc.depth()} | gates: {last_qc.size()}")
+last_qc.draw("mpl", style="iqp", fold=40)
+```
+</details>
