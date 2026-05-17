@@ -8,13 +8,21 @@ This repository implements a **Quantum Interior-Point Method (IPM)** for portfol
 
 ```
 QApp/
-├── quantum_ipm_research.ipynb         # Full research notebook (Qiskit 2.x, real market data)
-├── quantum_portfolio_tutorial.ipynb   # Self-contained 1-hour workshop tutorial
+├── notebooks/
+│   ├── quantum_ipm_research.ipynb      # Full research notebook (Qiskit 2.x, real market data)
+│   └── quantum_portfolio_tutorial.ipynb # Self-contained 45-min workshop tutorial
+├── core/                               # Shared quantum building blocks (extracted from research notebook)
 ├── utils/
-│   └── result_logger.py               # Standalone run logger & analyser
-├── results/                           # Timestamped JSON logs from each run
-├── requirements.txt                   # Full deps for the research notebook
-├── tutorial_requirements.txt          # Minimal deps for the tutorial
+│   └── result_logger.py                # Standalone run logger & analyser
+├── scripts/
+│   ├── fill_solutions.py               # Fill task cells → runnable instructor version
+│   └── strip_solutions.py             # Restore `...` skeletons → student version
+├── results/                            # Timestamped JSON logs from each run
+├── docs/
+│   ├── papers/                         # Reference papers
+│   ├── tasks.txt                       # Workshop task design notes
+│   └── benchmarking_insights.md
+├── requirements.txt
 └── README.md
 ```
 
@@ -22,27 +30,30 @@ QApp/
 
 ## Notebooks
 
-### 📗 `quantum_portfolio_tutorial.ipynb` — Workshop Tutorial
-A self-contained, beginner-friendly notebook for a **~1-hour workshop** (e.g., *Applications of Quantum Computing*, Prof. Jeanette Lorenz). Uses synthetic data embedded directly — no internet required. Covers:
+### 📗 `notebooks/quantum_portfolio_tutorial.ipynb` — Workshop Tutorial
 
-1. Markowitz SOCP formulation
-2. Classical Interior-Point baseline (CVXPY / CLARABEL)
-3. HHL quantum linear-system theory
-4. Simulated Quantum IPM with Qiskit
-5. Out-of-sample validation
-6. Discussion & extensions
+A self-contained notebook for a **~45-minute workshop** (*Applications of Quantum Computing*, Prof. Jeanette Lorenz, LMU Munich). Installs its own dependencies in the first cell. Covers:
+
+1. Live market data via `yfinance` (2024 training, 2025 OOS)
+2. Classical SOCP baseline (CVXPY / CLARABEL)
+3. Plain HHL on the equality-only KKT system → short positions appear
+4. Why HHL alone can't enforce inequality constraints
+5. SOCP reformulation + Quantum IPM (HHL as Newton-step subroutine)
+6. Three-way comparison + out-of-sample validation
+
+The notebook ships as a **student version** (three task cells contain `...` skeletons). See [Workshop scripts](#workshop-scripts) below.
 
 ```bash
-pip install -r tutorial_requirements.txt
-jupyter notebook quantum_portfolio_tutorial.ipynb
+jupyter notebook notebooks/quantum_portfolio_tutorial.ipynb
 ```
 
-### 📘 `quantum_ipm_research.ipynb` — Full Research Notebook
-The production-grade implementation. Fetches real market data via `yfinance`, runs the full 13-qubit Phase Estimation HHL solver, applies the Adaptive Ratio Test step-size, and logs every run to `results/`.
+### 📘 `notebooks/quantum_ipm_research.ipynb` — Full Research Notebook
+
+The production-grade implementation. Fetches real market data via `yfinance`, runs the full Phase Estimation HHL solver, applies an Adaptive Ratio Test step-size, and logs every run to `results/`.
 
 ```bash
 pip install -r requirements.txt
-jupyter notebook quantum_ipm_research.ipynb
+jupyter notebook notebooks/quantum_ipm_research.ipynb
 ```
 
 Configure via the `CONFIG` block at the top:
@@ -61,11 +72,27 @@ CONFIG = {
 
 ---
 
+## Workshop Scripts
+
+The tutorial ships in **student mode** (task cells have `...` placeholders). Two scripts toggle between modes:
+
+```bash
+# Fill task cells → notebook runs end-to-end (instructor / testing mode)
+python scripts/fill_solutions.py
+
+# Restore `...` skeletons → student version for distribution
+python scripts/strip_solutions.py
+```
+
+Both scripts identify task cells by their `# TODO` comment patterns, so they are robust to cell reordering.
+
+---
+
 ## Features
 
 - **Quantum HHL Solver**: Native Qiskit Phase Estimation circuit using `QFTGate` (Qiskit 2.x compatible)
 - **Adaptive Ratio Test**: Dynamic step-size per iteration — boundary-aware, faster convergence
-- **Apples-to-Apples Benchmarking**: Both solvers use identical SOCP/IPM formulation (CVXPY CLARABEL vs Quantum IPM)
+- **Apples-to-Apples Benchmarking**: Both solvers enforce identical constraints (CVXPY CLARABEL vs Quantum IPM)
 - **Run Logger** (`utils/result_logger.py`): Every run saved as a JSON in `results/` for cross-run analysis
 
 ---
@@ -84,6 +111,6 @@ print(df[["run_id", "n_clk", "cls_oos_pct", "quantum_oos_pct", "oos_gap_pct"]])
 
 ## References
 
-- Kerenidis, Prakash & Szilágyi (2021) — *"Quantum Interior Point Methods for SDPs"*
+- Kerenidis, Prakash & Szilágyi (2021) — *"Quantum Algorithms for Portfolio Optimization"*
 - Harrow, Hassidim & Lloyd (2009) — *"Quantum Algorithm for Linear Systems of Equations"*
 - Boyd & Vandenberghe — *"Convex Optimization"*
