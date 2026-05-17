@@ -1,5 +1,5 @@
 """
-utils/result_logger.py
+benchmarks/result_logger.py
 
 Standalone result logger for the Quantum IPM Portfolio Optimization research notebook.
 Call `log_run(...)` at the end of a notebook run to persist results to results/.
@@ -101,7 +101,7 @@ def summarise_runs(results_dir: str = None) -> list[dict]:
     sorted by timestamp (newest first).
 
     Useful for analysis:
-        from utils.result_logger import summarise_runs
+        from benchmarks.result_logger import summarise_runs
         import pandas as pd
         df = pd.DataFrame(summarise_runs())
     """
@@ -143,7 +143,7 @@ def load_result(path: str) -> dict:
 
     Example
     -------
-        from utils.result_logger import load_result, run_benchmark_from_result
+        from benchmarks.result_logger import load_result, run_benchmark_from_result
         result = load_result("results/run_20260511_162804.json")
         run_benchmark_from_result(result)
     """
@@ -170,7 +170,7 @@ def load_result_by_id(run_id: str, results_dir: str = None) -> dict:
 
     Example
     -------
-        from utils.result_logger import load_result_by_id, run_benchmark_from_result
+        from benchmarks.result_logger import load_result_by_id, run_benchmark_from_result
         run_benchmark_from_result(load_result_by_id("run_20260511_162804"))
     """
     if results_dir is None:
@@ -213,7 +213,7 @@ def run_benchmark_from_result(result: dict) -> None:
 
     Example
     -------
-        from utils.result_logger import load_result, run_benchmark_from_result
+        from benchmarks.result_logger import load_result, run_benchmark_from_result
         run_benchmark_from_result(load_result("results/run_20260511_162804.json"))
     """
     # ------------------------------------------------------------------ #

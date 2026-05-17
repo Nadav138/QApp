@@ -28,5 +28,5 @@ Total return is a "noisy" metric. We should add:
 
 ## 3. Implementation Steps
 1.  Update the OOS cell in the research notebook to calculate daily returns and volatility.
-2.  Incorporate Sharpe Ratio and HHI into the `utils/result_logger.py` data structure.
+2.  Incorporate Sharpe Ratio and HHI into the `benchmarks/result_logger.py` data structure.
 3.  Run a sweep across different `n_clk` values (e.g., 5, 6, 7, 8) and record the impact on OOS metrics.

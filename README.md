@@ -12,7 +12,7 @@ QApp/
 │   ├── quantum_ipm_research.ipynb      # Full research notebook (Qiskit 2.x, real market data)
 │   └── quantum_portfolio_tutorial.ipynb # Self-contained 45-min workshop tutorial
 ├── core/                               # Shared quantum building blocks (extracted from research notebook)
-├── utils/
+├── benchmarks/
 │   └── result_logger.py                # Standalone run logger & analyser
 ├── scripts/
 │   ├── fill_solutions.py               # Fill task cells → runnable instructor version
@@ -93,14 +93,14 @@ Both scripts identify task cells by their `# TODO` comment patterns, so they are
 - **Quantum HHL Solver**: Native Qiskit Phase Estimation circuit using `QFTGate` (Qiskit 2.x compatible)
 - **Adaptive Ratio Test**: Dynamic step-size per iteration — boundary-aware, faster convergence
 - **Apples-to-Apples Benchmarking**: Both solvers enforce identical constraints (CVXPY CLARABEL vs Quantum IPM)
-- **Run Logger** (`utils/result_logger.py`): Every run saved as a JSON in `results/` for cross-run analysis
+- **Run Logger** (`benchmarks/result_logger.py`): Every run saved as a JSON in `results/` for cross-run analysis
 
 ---
 
 ## Analysing Results
 
 ```python
-from utils.result_logger import summarise_runs
+from benchmarks.result_logger import summarise_runs
 import pandas as pd
 
 df = pd.DataFrame(summarise_runs())
