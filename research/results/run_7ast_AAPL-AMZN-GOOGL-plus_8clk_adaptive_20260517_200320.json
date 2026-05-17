@@ -1,0 +1,60 @@
+{
+  "run_id": "run_7ast_AAPL-AMZN-GOOGL-plus_8clk_adaptive_20260517_200320",
+  "timestamp": "20260517_200320",
+  "config": {
+    "tickers": [
+      "AAPL",
+      "MSFT",
+      "NVDA",
+      "AMZN",
+      "META",
+      "GOOGL",
+      "TSLA"
+    ],
+    "train_start": "2024-01-01",
+    "train_end": "2024-12-31",
+    "target_return": 0.2,
+    "max_weight": 0.3,
+    "total_allocation": 1.0,
+    "quantum_ipm_use_adaptive_step": true,
+    "quantum_ipm_alpha": 0.8,
+    "quantum_hhl_n_clk": 8
+  },
+  "classical": {
+    "solver": "CVXPY CLARABEL (SOCP IPM)",
+    "status": "optimal",
+    "success": true,
+    "weights": {
+      "AAPL": 0.2999999991619527,
+      "MSFT": 0.29999999909241387,
+      "NVDA": 5.4021341749465264e-09,
+      "AMZN": 0.1436097900284509,
+      "META": 0.04530781303329172,
+      "GOOGL": 0.21108238008433985,
+      "TSLA": 1.3197416532789358e-08
+    },
+    "expected_return": 0.31891662371027996,
+    "annual_variance": 0.03518487923612189
+  },
+  "quantum": {
+    "solver": "Quantum IPM (SOCP / HHL Phase Estimation)",
+    "n_clock_qubits": 8,
+    "adaptive_step": true,
+    "weights": {
+      "AAPL": 0.2646416553451657,
+      "MSFT": 0.3254197947795032,
+      "NVDA": 1.0424344258825493e-06,
+      "AMZN": 0.15014173473583256,
+      "META": 0.021291904565013363,
+      "GOOGL": 0.23007534176450767,
+      "TSLA": 0.008428526375551453
+    },
+    "expected_return": 0.3124518692207718,
+    "annual_variance": 0.03570843562934168
+  },
+  "out_of_sample": {
+    "test_period": "2025-01-01 to 2025-12-31",
+    "classical_return_pct": 24.268014772249394,
+    "quantum_return_pct": 25.454114467290907
+  }
+}
