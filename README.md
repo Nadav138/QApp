@@ -8,16 +8,17 @@ This repository implements a **Quantum Interior-Point Method (IPM)** for portfol
 
 ```
 QApp/
-├── notebooks/
+├── research/
 │   ├── quantum_ipm_research.ipynb      # Full research notebook (Qiskit 2.x, real market data)
-│   └── quantum_portfolio_tutorial.ipynb # Self-contained 45-min workshop tutorial
+│   └── results/                        # Timestamped JSON logs from research runs
+├── workshop/
+│   ├── quantum_portfolio_tutorial.ipynb # Self-contained 45-min workshop tutorial
+│   └── scripts/
+│       ├── fill_solutions.py           # Fill task cells → runnable instructor version
+│       └── strip_solutions.py         # Restore `...` skeletons → student version
 ├── core/                               # Shared quantum building blocks (extracted from research notebook)
 ├── benchmarks/
-│   └── result_logger.py                # Standalone run logger & analyser
-├── scripts/
-│   ├── fill_solutions.py               # Fill task cells → runnable instructor version
-│   └── strip_solutions.py             # Restore `...` skeletons → student version
-├── results/                            # Timestamped JSON logs from each run
+│   └── result_logger.py               # Run logger & analyser for the research notebook
 ├── docs/
 │   ├── papers/                         # Reference papers
 │   ├── tasks.txt                       # Workshop task design notes
@@ -30,7 +31,7 @@ QApp/
 
 ## Notebooks
 
-### 📗 `notebooks/quantum_portfolio_tutorial.ipynb` — Workshop Tutorial
+### 📗 `workshop/quantum_portfolio_tutorial.ipynb` — Workshop Tutorial
 
 A self-contained notebook for a **~45-minute workshop** (*Applications of Quantum Computing*, Prof. Jeanette Lorenz, LMU Munich). Installs its own dependencies in the first cell. Covers:
 
@@ -44,16 +45,16 @@ A self-contained notebook for a **~45-minute workshop** (*Applications of Quantu
 The notebook ships as a **student version** (three task cells contain `...` skeletons). See [Workshop scripts](#workshop-scripts) below.
 
 ```bash
-jupyter notebook notebooks/quantum_portfolio_tutorial.ipynb
+jupyter notebook workshop/quantum_portfolio_tutorial.ipynb
 ```
 
-### 📘 `notebooks/quantum_ipm_research.ipynb` — Full Research Notebook
+### 📘 `research/quantum_ipm_research.ipynb` — Full Research Notebook
 
-The production-grade implementation. Fetches real market data via `yfinance`, runs the full Phase Estimation HHL solver, applies an Adaptive Ratio Test step-size, and logs every run to `results/`.
+The production-grade implementation. Fetches real market data via `yfinance`, runs the full Phase Estimation HHL solver, applies an Adaptive Ratio Test step-size, and logs every run to `research/results/`.
 
 ```bash
 pip install -r requirements.txt
-jupyter notebook notebooks/quantum_ipm_research.ipynb
+jupyter notebook research/quantum_ipm_research.ipynb
 ```
 
 Configure via the `CONFIG` block at the top:
@@ -78,10 +79,10 @@ The tutorial ships in **student mode** (task cells have `...` placeholders). Two
 
 ```bash
 # Fill task cells → notebook runs end-to-end (instructor / testing mode)
-python scripts/fill_solutions.py
+python workshop/scripts/fill_solutions.py
 
 # Restore `...` skeletons → student version for distribution
-python scripts/strip_solutions.py
+python workshop/scripts/strip_solutions.py
 ```
 
 Both scripts identify task cells by their `# TODO` comment patterns, so they are robust to cell reordering.
@@ -93,7 +94,7 @@ Both scripts identify task cells by their `# TODO` comment patterns, so they are
 - **Quantum HHL Solver**: Native Qiskit Phase Estimation circuit using `QFTGate` (Qiskit 2.x compatible)
 - **Adaptive Ratio Test**: Dynamic step-size per iteration — boundary-aware, faster convergence
 - **Apples-to-Apples Benchmarking**: Both solvers enforce identical constraints (CVXPY CLARABEL vs Quantum IPM)
-- **Run Logger** (`benchmarks/result_logger.py`): Every run saved as a JSON in `results/` for cross-run analysis
+- **Run Logger** (`benchmarks/result_logger.py`): Research notebook runs saved as timestamped JSON in `research/results/`
 
 ---
 

@@ -1,6 +1,6 @@
 # Benchmarking Insights: Quantum vs. Classical Portfolio Optimization
 
-Based on the initial run results in `results/run_20260510_175027.json`, here are the findings and recommendations for improving our benchmarking framework.
+Based on the initial run results in `research/results/run_20260510_175027.json`, here are the findings and recommendations for improving our benchmarking framework.
 
 ## 1. Initial Findings
 *   **Precision Parity**: The Quantum IPM implementation (using HHL-simulated Newton steps) achieves results very close to the `CLARABEL` SOCP solver. 

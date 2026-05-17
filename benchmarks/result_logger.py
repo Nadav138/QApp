@@ -2,7 +2,7 @@
 benchmarks/result_logger.py
 
 Standalone result logger for the Quantum IPM Portfolio Optimization research notebook.
-Call `log_run(...)` at the end of a notebook run to persist results to results/.
+Call `log_run(...)` at the end of a notebook run to persist results to research/results/.
 Call `run_benchmark_from_result(result)` to re-run the OOS benchmark from a saved JSON.
 """
 
@@ -32,12 +32,12 @@ def log_run(
     results_dir: str = None,
 ) -> str:
     """
-    Persist one experiment run to a timestamped JSON file inside results/.
+    Persist one experiment run to a timestamped JSON file inside research/results/.
 
     Returns the path of the written file.
     """
     if results_dir is None:
-        results_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "results")
+        results_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "research", "results")
     os.makedirs(results_dir, exist_ok=True)
 
     timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -106,7 +106,7 @@ def summarise_runs(results_dir: str = None) -> list[dict]:
         df = pd.DataFrame(summarise_runs())
     """
     if results_dir is None:
-        results_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "results")
+        results_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "research", "results")
 
     summaries = []
     for fname in sorted(os.listdir(results_dir), reverse=True):
@@ -144,7 +144,7 @@ def load_result(path: str) -> dict:
     Example
     -------
         from benchmarks.result_logger import load_result, run_benchmark_from_result
-        result = load_result("results/run_20260511_162804.json")
+        result = load_result("research/results/run_20260511_162804.json")
         run_benchmark_from_result(result)
     """
     with open(path) as f:
@@ -166,7 +166,7 @@ def load_result_by_id(run_id: str, results_dir: str = None) -> dict:
         Accepts both bare IDs (``"run_20260511_162804"``) and full file
         names (``"run_20260511_162804.json"``).
     results_dir : str, optional
-        Override the default ``results/`` directory.
+        Override the default ``research/results/`` directory.
 
     Example
     -------
@@ -174,7 +174,7 @@ def load_result_by_id(run_id: str, results_dir: str = None) -> dict:
         run_benchmark_from_result(load_result_by_id("run_20260511_162804"))
     """
     if results_dir is None:
-        results_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "results")
+        results_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "research", "results")
 
     # Accept either "run_YYYYMMDD_HHMMSS" or "run_YYYYMMDD_HHMMSS.json"
     if not run_id.endswith(".json"):
@@ -214,7 +214,7 @@ def run_benchmark_from_result(result: dict) -> None:
     Example
     -------
         from benchmarks.result_logger import load_result, run_benchmark_from_result
-        run_benchmark_from_result(load_result("results/run_20260511_162804.json"))
+        run_benchmark_from_result(load_result("research/results/run_20260511_162804.json"))
     """
     # ------------------------------------------------------------------ #
     # 0.  Lazy imports so the module stays importable without these deps  #
