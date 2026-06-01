@@ -1,0 +1,46 @@
+Next Steps for Workshop Finalization
+===================================
+
+1. Presentation Preparation
+----------------------------
+* Draft slides (10 minutes max target) covering:
+  - Matrices:
+    * Annualized Covariance Matrix (Σ) representing risk and asset correlations.
+    * KKT System Matrix (K) combining objective function gradients and constraints.
+  - Algorithm (Quantum IPM & HHL):
+    * HHL as a quantum linear solver subroutine.
+    * Log-barrier functions converting inequality constraints to barrier terms.
+    * Iterative Newton steps mapping update directions.
+  - Finance:
+    * Expected return (w^T * μ) and variance/volatility (w^T * Σ * w).
+    * Portfolio constraints: fully-invested (sum(w)=1), diversification cap (w_i <= 0.35), and long-only (w_i >= 0).
+    * Didactic lesson: Why dropping inequality constraints leads unconstrained HHL to yield invalid short positions.
+
+2. Dry Run & Time Assessment
+----------------------------
+* Run the notebook end-to-end (Instructor version) to measure execution times.
+* Check Qiskit statevector simulation latency with CONFIG["quantum_hhl_n_clk"] = 4 (should be < 1s).
+* Time a mock execution of Task 1 (live-coding the HHL solver and circuit drawing) to estimate student typing duration.
+
+3. Consider Modifications if Running Overtime
+---------------------------------------------
+* Option A (No-change + Homework): Run the workshop as-is, but move quickly through the code cells, explain the concepts, and let students finish the tasks at home.
+* Option B (Semi-prefilled Tasks): Pre-fill Tasks 2 and 3 so students only write code for Task 1 (the Qiskit circuit).
+* Option C (Network Fallback): Force the offline fallback cell to run instead of yfinance downloading to prevent network latency issues.
+
+4. Refine Repo & Publish
+------------------------
+* Clean up temporary files/docs (.DS_Store, bench logs, tasks draft) and push to the public target repository.
+* Ensure README and license are up to date for class distribution.
+
+5. Google Colab Compatibility Check
+-----------------------------------
+* Verify that the tutorial runs correctly in a Google Colab notebook environment.
+* Test that pip installs (Cell 0) run smoothly in Colab's default Linux container.
+* Add a "Open in Colab" badge to the top of the README/notebook.
+
+6. Consider GPU/TPU Acceleration Options in Colab (Advanced)
+-----------------------------------------------------------
+* Explore running Qiskit simulation on Colab GPUs/TPUs (e.g., using `qiskit-aer-gpu`).
+* Evaluate if adding GPU configuration to the student tasks makes the workshop too difficult, or if it should be left as an optional extension section at the end.
+
