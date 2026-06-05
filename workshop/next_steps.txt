@@ -5,6 +5,7 @@ Workshop Next Steps
 [~] Slides        — Polish & verify content (consider 2-3 extra slides for while the code runs)
 [~] Dry run       — Time full notebook + Task 1 live-coding
 [ ] Overtime plan — Decide: pre-fill Tasks 2 & 3, or homework
+[ ] Colab test    — Final version colab test before publishing
 [X] QIPM wait     — Deeper algo slides for during-run / GPU/TPU? (GPU/TPU not helpful, done)
 [X] Repo cleanup  — Removed .DS_Store + draft scripts; README updated. Apache 2.0 LICENSE added.
 [X] Colab badge   — Added "Open in Colab" badge to README (workshop tutorial)
