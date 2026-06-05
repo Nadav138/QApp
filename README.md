@@ -12,10 +12,13 @@ QApp/
 │   ├── quantum_ipm_research.ipynb      # Full research notebook (Qiskit 2.x, real market data)
 │   └── results/                        # Timestamped JSON logs from research runs
 ├── workshop/
-│   ├── quantum_portfolio_tutorial.ipynb # Self-contained 45-min workshop tutorial
+│   ├── quantum_portfolio_tutorial.ipynb         # Self-contained 45-min workshop tutorial (Qiskit)
+│   ├── classiq_quantum_portfolio_tutorial.ipynb # Classiq/Qmod variant of the tutorial
 │   └── scripts/
-│       ├── fill_solutions.py           # Fill task cells → runnable instructor version
-│       └── strip_solutions.py         # Restore `...` skeletons → student version
+│       ├── fill_solutions.py           # Fill task cells → runnable instructor version (Qiskit)
+│       ├── strip_solutions.py          # Restore `...` skeletons → student version (Qiskit)
+│       ├── fill_solutions_classiq.py   # Fill task cells → instructor version (Classiq)
+│       └── strip_solutions_classiq.py  # Restore `...` skeletons → student version (Classiq)
 ├── core/                               # Shared quantum building blocks (extracted from research notebook)
 ├── benchmarks/
 │   └── result_logger.py               # Run logger & analyser for the research notebook
@@ -32,6 +35,8 @@ QApp/
 ## Notebooks
 
 ### 📗 `workshop/quantum_portfolio_tutorial.ipynb` — Workshop Tutorial
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Nadav138/QApp/blob/main/workshop/quantum_portfolio_tutorial.ipynb)
 
 A self-contained notebook for a **~45-minute workshop** (*Applications of Quantum Computing*, Prof. Jeanette Lorenz, LMU Munich). Installs its own dependencies in the first cell. Covers:
 

@@ -1,11 +1,12 @@
 Workshop Next Steps
 ===================
 
-[ ] Slides          — Read IPM QIPM parts in the paper: understand deeper
-[ ] Slides          — Polish & verify content
-[ ] QIPM wait (~10 min) — Prepare 1-2 deeper algo slides for during-run presentation / GPU TPU? 
-[ ] Colab speed     — ~13 min on CPU; explore qiskit-aer-gpu on GPU runtime
-[ ] Dry run         — Time full notebook + Task 1 live-coding
-[ ] Overtime plan   — Decide: pre-fill Tasks 2&3, or homework
-[ ] Repo cleanup    — Remove .DS_Store / drafts, confirm README & license
-[ ] Colab badge     — Add "Open in Colab" to README once runtime is ok
+[~] Slides        — Read IPM/QIPM parts in the paper: understand deeper
+[~] Slides        — Polish & verify content (consider 2-3 extra slides for while the code runs)
+[X] QIPM wait     — Deeper algo slides for during-run / GPU/TPU? (GPU/TPU not helpful, done)
+[ ] Dry run       — Time full notebook + Task 1 live-coding
+[ ] Overtime plan — Decide: pre-fill Tasks 2 & 3, or homework
+[~] Repo cleanup  — Removed .DS_Store + draft scripts; README updated. TODO: no LICENSE file exists yet
+[X] Colab badge   — Added "Open in Colab" badge to README (workshop tutorial)
+
+Legend: [ ] todo   [~] in progress   [X] done
