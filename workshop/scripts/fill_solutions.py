@@ -43,7 +43,7 @@ SOLUTIONS = {
         "var_qipm = float(w_qipm @ cov_mat @ w_qipm)\n"
         "std_qipm = float(np.sqrt(var_qipm))\n\n"
         'print(f"\\n⏱  Quantum IPM finished in {elapsed_qipm:.1f} s")\n'
-        "print(f\"   Expected return  : {ret_qipm:.2%}   (target ≥ {CONFIG['target_return']:.0%})\")\n"
+        "print(f\"   Expected return  : {ret_qipm:.2%}   (target = {CONFIG['target_return']:.0%})\")\n"
         'print(f"   Annual variance  : {var_qipm:.4f}")\n'
         'print(f"   Annual volatility: {std_qipm:.2%}")\n'
     ),
@@ -89,7 +89,7 @@ def fill(nb_path: Path = NOTEBOOK) -> None:
                 break
 
     with open(nb_path, "w") as f:
-        json.dump(nb, f, indent=1)
+        json.dump(nb, f, indent=1, ensure_ascii=False)
 
     print(f"✅  Filled {patched}/{len(SOLUTIONS)} task cells in {nb_path.name}")
 
