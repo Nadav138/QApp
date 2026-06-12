@@ -22,7 +22,7 @@ SOLUTIONS = {
         "K_eq   = np.block([[H_eq, A_eq.T], [A_eq, np.zeros((2, 2))]])\n"
         'rhs_eq = np.concatenate([np.zeros(n), [1.0, CONFIG["target_return"]]])\n\n'
         "# TODO (1): read the number of clock qubits from CONFIG\n"
-        'n_clk_demo = CONFIG["quantum_hhl_n_clk"]\n\n'
+        'n_clk_demo = CONFIG["quantum_hhl_demo_n_clk"]\n\n'
         "n_sys_demo = int(np.ceil(np.log2(K_eq.shape[0])))\n"
         'print(f"Equality-only KKT: {K_eq.shape[0]}×{K_eq.shape[1]}")\n'
         'print(f"Circuit registers: sys={n_sys_demo} qubits | clk={n_clk_demo} qubits | anc=1 qubit")\n'
@@ -84,12 +84,13 @@ def fill(nb_path: Path = NOTEBOOK) -> None:
         src = "".join(cell["source"])
         for marker, solution in SOLUTIONS.items():
             if marker in src:
-                cell["source"] = [solution]
+                cell["source"] = solution.splitlines(keepends=True)
                 patched += 1
                 break
 
     with open(nb_path, "w") as f:
         json.dump(nb, f, indent=1, ensure_ascii=False)
+        f.write("\n")
 
     print(f"✅  Filled {patched}/{len(SOLUTIONS)} task cells in {nb_path.name}")
 

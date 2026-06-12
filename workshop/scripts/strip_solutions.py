@@ -15,7 +15,7 @@ NOTEBOOK = Path(__file__).parent.parent / "quantum_portfolio_tutorial.ipynb"
 
 SKELETONS = {
     # Task 1 — identified by the filled n_clk_demo assignment
-    'n_clk_demo = CONFIG["quantum_hhl_n_clk"]': (
+    'n_clk_demo = CONFIG["quantum_hhl_demo_n_clk"]': (
         "# Equality-only KKT:  K = [[2Σ, Aᵀ], [A, 0]],  rhs = [0,…,0, 1, target_return]\n"
         "H_eq   = 2 * cov_mat\n"
         "A_eq   = np.vstack([np.ones((1, n)), mu_vec.reshape(1, n)])      # budget, return\n"
@@ -84,12 +84,13 @@ def strip(nb_path: Path = NOTEBOOK) -> None:
         src = "".join(cell["source"])
         for marker, skeleton in SKELETONS.items():
             if marker in src:
-                cell["source"] = [skeleton]
+                cell["source"] = skeleton.splitlines(keepends=True)
                 patched += 1
                 break
 
     with open(nb_path, "w") as f:
         json.dump(nb, f, indent=1, ensure_ascii=False)
+        f.write("\n")
 
     print(f"✅  Stripped {patched}/{len(SKELETONS)} task cells in {nb_path.name}")
 
