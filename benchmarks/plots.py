@@ -87,14 +87,14 @@ def plot_qipm_convergence(
     theory = gaps[0] * (sigma_theory**k)
 
     fig, ax = plt.subplots(figsize=(7, 3.5))
-    ax.semilogy(k, gaps, marker="o", label="Quantum IPM")
-    ax.semilogy(k, theory, linestyle="--", label=r"Theory $\nu_0 \cdot \sigma^k$")
+    ax.semilogy(k, gaps, marker="o", color="darkorange", linewidth=2, label="Quantum IPM")
+    ax.semilogy(k, theory, linestyle="--", color="steelblue", label=r"Theory $\nu_0 \cdot \sigma^k$")
 
-    tolerance_label = "Tolerance 1e-2" if tolerance == 1e-2 else f"Tolerance {tolerance:g}"
-    ax.axhline(tolerance, color="gray", linestyle=":", label=tolerance_label)
+    tolerance_label = f"Tolerance {tolerance:g}"
+    ax.axhline(tolerance, color="gray", linestyle="--", alpha=0.7, label=tolerance_label)
     ax.set_xlabel("Iteration")
     ax.set_ylabel("Duality Gap (log scale)")
-    ax.set_title(rf"Quantum IPM Convergence (short-step rate $\sigma \approx {sigma_theory:.3f}$)")
+    ax.set_title(rf"Quantum IPM — Convergence (short-step rate $\sigma \approx {sigma_theory:.3f}$)")
     ax.legend()
 
     plt.tight_layout()
