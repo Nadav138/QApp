@@ -8,7 +8,8 @@ Workshop Next Steps
 [ ] Colab test    — Final version colab test before publishing
 [ ] Prep notebook — Run full updated version, then strip solutions before sharing
 [ ] Try To solve tasks alone
-[ ] Test 15 iteration instead of 20
+[ ] yesterday's commit inspection
+[ ] How many steps? adaptive step to delete?
 [X] QIPM wait     — Deeper algo slides for during-run / GPU/TPU? (GPU/TPU not helpful, done)
 [X] Repo cleanup  — Removed .DS_Store + draft scripts; README updated. Apache 2.0 LICENSE added.
 [X] Colab badge   — Added "Open in Colab" badge to README (workshop tutorial)

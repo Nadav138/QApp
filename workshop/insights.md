@@ -10,3 +10,4 @@
 - **Squaring optimization alone saves nothing:** expm was always negligible; synthesis was the bottleneck. Combine with direct-matrix fix for code cleanliness, not for speed.
 - **GPU didn't help:** Bottleneck was Python/Qiskit gate-synthesis overhead, not BLAS. GPUs accelerate linear algebra, not Python call overhead.
 - **Clipping/renormalization manufactured false convergence:** Post-step clipping and `w/sum(w)` masked the true mid-path iterate. Raw weights with `sum(w)≠1` are the honest output (paper Thm 6.6).
+- **Final QIPM Newton circuit is structurally identical to §3 HHL:** Same 4 stages (state-prep → QPE → eigenvalue-inversion → uncompute QPE), just on a larger register. The 44×44 Newton matrix dilates to 88×88, pads to 128×128 → n_sys=7; with n_clk=8 the full circuit is 16 qubits. Captured via `hhl.last_qc` after the final IPM iteration.
