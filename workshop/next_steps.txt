@@ -10,6 +10,7 @@ Workshop Next Steps
 [ ] Try To solve tasks alone
 [ ] yesterday's commit inspection
 [ ] How many steps? adaptive step to delete?
+[ ] Research universe — research notebook still all-tech (7 names); add a low-correlation/safe-haven asset (e.g. TLT/GLD) for a true min-variance portfolio (from docs/ideas.txt)
 [X] QIPM wait     — Deeper algo slides for during-run / GPU/TPU? (GPU/TPU not helpful, done)
 [X] Repo cleanup  — Removed .DS_Store + draft scripts; README updated. Apache 2.0 LICENSE added.
 [X] Colab badge   — Added "Open in Colab" badge to README (workshop tutorial)
