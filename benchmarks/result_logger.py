@@ -12,6 +12,17 @@ import datetime
 import numpy as np
 
 
+def _config_clock_qubits(config: dict, default: int | None = 6):
+    """Return the QPE clock-qubit count, accepting old notebook keys."""
+    return config.get(
+        "qpe_clock_qubits",
+        config.get(
+            "quantum_qipm_n_clk",
+            config.get("quantum_hhl_clock_qubits", config.get("quantum_hhl_n_clk", default)),
+        ),
+    )
+
+
 def log_run(
     config: dict,
     assets: list,
@@ -30,6 +41,9 @@ def log_run(
     quantum_oos_pct: float,
     oos_period: str = "2025-01-01 to 2025-12-31",
     results_dir: str = None,
+    qipm_status: str | None = None,
+    qipm_diagnostics: dict | None = None,
+    qipm_result: dict | None = None,
 ) -> str:
     """
     Persist one experiment run to a timestamped JSON file inside research/results/.
@@ -42,14 +56,15 @@ def log_run(
 
     timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
     
-    # Inductive naming: count, top 3 tickers, n_clk, adaptive/static
+    # Clear run naming: asset count, representative tickers, QPE clock-qubit count, step rule.
     num_assets = len(assets)
     top_tickers = "-".join(sorted(assets)[:3])
     plus_suffix = "-plus" if num_assets > 3 else ""
-    n_clk = config.get("quantum_hhl_n_clk", 6)
-    adaptive = "adaptive" if config.get("quantum_ipm_use_adaptive_step", False) else "static"
+    clock_qubits = _config_clock_qubits(config)
+    step_rule = config.get("quantum_ipm_step_rule")
+    adaptive = step_rule or ("adaptive" if config.get("quantum_ipm_use_adaptive_step", False) else "static")
     
-    run_id = f"run_{num_assets}ast_{top_tickers}{plus_suffix}_{n_clk}clk_{adaptive}_{timestamp}"
+    run_id = f"run_{num_assets}ast_{top_tickers}{plus_suffix}_{clock_qubits}clockq_{adaptive}_{timestamp}"
 
     run_log = {
         "run_id": run_id,
@@ -63,7 +78,11 @@ def log_run(
             "total_allocation": config.get("total_allocation", 1.0),
             "quantum_ipm_use_adaptive_step": config.get("quantum_ipm_use_adaptive_step", False),
             "quantum_ipm_alpha": config.get("quantum_ipm_alpha", 0.8),
-            "quantum_hhl_n_clk": config.get("quantum_hhl_n_clk", 6),
+            "quantum_ipm_step_rule": config.get("quantum_ipm_step_rule"),
+            "quantum_qipm_n_clk": clock_qubits,
+            "qpe_clock_qubits": clock_qubits,
+            "quantum_hhl_n_clk": config.get("quantum_hhl_n_clk", clock_qubits),
+            "quantum_hhl_clock_qubits": clock_qubits,
         },
         "classical": {
             "solver": "CVXPY CLARABEL (SOCP IPM)",
@@ -75,8 +94,17 @@ def log_run(
         },
         "quantum": {
             "solver": "Quantum IPM (SOCP / HHL Phase Estimation)",
-            "n_clock_qubits": config.get("quantum_hhl_n_clk", 6),
+            "n_clock_qubits": clock_qubits,
+            "qpe_clock_qubits": clock_qubits,
             "adaptive_step": config.get("quantum_ipm_use_adaptive_step", False),
+            "step_rule": config.get("quantum_ipm_step_rule"),
+            "status": qipm_status,
+            "diagnostics": qipm_diagnostics or {},
+            "raw_weights": True,
+            "sum_weights": float(np.sum(w_qipm)),
+            "iterations": (qipm_result or {}).get("iterations"),
+            "sigma_theory": (qipm_result or {}).get("sigma_theory"),
+            "gap_ratios": (qipm_result or {}).get("gap_ratios"),
             "weights": {a: float(w) for a, w in zip(assets, w_qipm)},
             "expected_return": float(ipm_ret),
             "annual_variance": float(ipm_var),
@@ -114,6 +142,7 @@ def summarise_runs(results_dir: str = None) -> list[dict]:
             continue
         with open(os.path.join(results_dir, fname)) as f:
             data = json.load(f)
+        clock_qubits = _config_clock_qubits(data.get("config", {}), default=None)
         summaries.append({
             "run_id":            data.get("run_id"),
             "timestamp":         data.get("timestamp"),
@@ -122,13 +151,19 @@ def summarise_runs(results_dir: str = None) -> list[dict]:
             "train_end":         data["config"].get("train_end"),
             "target_return":     data["config"].get("target_return"),
             "max_weight":        data["config"].get("max_weight"),
-            "n_clk":             data["config"].get("quantum_hhl_n_clk"),
+            "clock_qubits":      clock_qubits,
+            "n_clk":             clock_qubits,  # Backward-compatible alias.
             "adaptive":          data["config"].get("quantum_ipm_use_adaptive_step"),
+            "step_rule":         data["config"].get("quantum_ipm_step_rule"),
             "cls_ok":            data["classical"].get("success"),
             "cls_return":        data["classical"].get("expected_return"),
             "cls_variance":      data["classical"].get("annual_variance"),
+            "qipm_status":       data["quantum"].get("status"),
             "qipm_return":       data["quantum"].get("expected_return"),
             "qipm_variance":     data["quantum"].get("annual_variance"),
+            "qipm_sum_w":        data["quantum"].get("sum_weights"),
+            "qipm_primal_resid": data["quantum"].get("diagnostics", {}).get("primal_resid_inf") or data["quantum"].get("diagnostics", {}).get("primal_resid"),
+            "qipm_dual_resid":   data["quantum"].get("diagnostics", {}).get("dual_resid_inf") or data["quantum"].get("diagnostics", {}).get("dual_resid"),
             "cls_oos_pct":       data["out_of_sample"].get("classical_return_pct"),
             "quantum_oos_pct":   data["out_of_sample"].get("quantum_return_pct"),
             "oos_gap_pct":       (data["out_of_sample"].get("quantum_return_pct", 0)

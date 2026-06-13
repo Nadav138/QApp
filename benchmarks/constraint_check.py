@@ -1,10 +1,7 @@
 """
 benchmarks/constraint_check.py
 ==============================
-Portfolio constraint validation — verifies that a weight vector satisfies
-budget, return, long-only, max-weight, and any extra inequality constraints.
-
-Produces a tidy DataFrame report suitable for ``display(...)`` in a notebook.
+Portfolio constraint validation for raw or normalized weight vectors.
 """
 
 import numpy as np
@@ -19,35 +16,33 @@ def build_constraint_report(
     total_allocation: float = 1.0,
     extra_inequalities: list | None = None,
     assets: list | None = None,
+    return_relation: str = "ineq",
+    tol: float = 1e-6,
 ) -> pd.DataFrame:
     """
     Build a constraint-validation report for a portfolio weight vector.
 
-    Parameters
-    ----------
-    w                : np.ndarray   Portfolio weights.
-    mu_vec           : np.ndarray   Expected-return vector (same length as w).
-    target_return    : float        Required portfolio return.
-    max_weight       : float        Upper bound on individual weights.
-    total_allocation : float        Budget target (default 1.0 → fully invested).
-    extra_inequalities : list[(dict, float)] | None
-        Optional list of ``(coeffs, rhs)`` pairs encoding ``Σ coeffs[a]·w_a ≤ rhs``.
-        ``coeffs`` is a dict mapping asset ticker → coefficient.
-        Requires ``assets`` to be provided so coefficients can be resolved.
-    assets : list[str] | None
-        Ordered list of tickers matching ``w``. Required only when
-        ``extra_inequalities`` is non-empty.
-
-    Returns
-    -------
-    pd.DataFrame
-        Columns: ``constraint, value, condition, is_satisfied``.
+    ``return_relation='eq'`` matches the paper formulation ``mu.T @ w = R``.
+    The report does not renormalize or clip weights; violations are shown raw.
     """
-    rows = []
-    rows.append(("budget_eq",              float(np.sum(w) - total_allocation), "~0"))
-    rows.append(("return_ineq (>=target)", float(w @ mu_vec - target_return),   ">=0"))
-    rows.append(("long_only_min",          float(np.min(w)),                    ">=0"))
-    rows.append(("max_weight_cap",         float(max_weight - np.max(w)),       ">=0"))
+    if return_relation not in ("ineq", "eq"):
+        raise ValueError("return_relation must be either 'ineq' or 'eq'.")
+
+    w = np.asarray(w, dtype=float)
+    mu_vec = np.asarray(mu_vec, dtype=float)
+
+    rows = [
+        ("budget_eq", float(np.sum(w) - total_allocation), "~0"),
+    ]
+    if return_relation == "eq":
+        rows.append(("return_eq", float(w @ mu_vec - target_return), "~0"))
+    else:
+        rows.append(("return_ineq (>=target)", float(w @ mu_vec - target_return), ">=0"))
+    rows.extend([
+        ("long_only_min", float(np.min(w)), ">=0"),
+        ("max_weight_cap", float(max_weight - np.max(w)), ">=0"),
+        ("sum_w_raw", float(np.sum(w)), "report"),
+    ])
 
     if extra_inequalities:
         if assets is None:
@@ -57,8 +52,13 @@ def build_constraint_report(
             rows.append((f"extra_ineq_{i} (rhs-row@w)", float(rhs - row @ w), ">=0"))
 
     out = pd.DataFrame(rows, columns=["constraint", "value", "condition"])
-    out["is_satisfied"] = out.apply(
-        lambda r: abs(r["value"]) <= 1e-6 if r["condition"] == "~0" else r["value"] >= -1e-6,
-        axis=1,
-    )
+
+    def _satisfied(row):
+        if row["condition"] == "~0":
+            return abs(row["value"]) <= tol
+        if row["condition"] == ">=0":
+            return row["value"] >= -tol
+        return True
+
+    out["is_satisfied"] = out.apply(_satisfied, axis=1)
     return out
