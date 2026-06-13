@@ -1,13 +1,11 @@
 # Future Work — Notebook Function Extraction
 
-> **Status: deferred / not yet implemented.** This is the roadmap for the *next*
+> **Status: completed / fully implemented on main.** This was the roadmap for the
 > refactor phase — pulling the research notebook's inline functions into reusable
-> `core/`/`benchmarks/` modules. None of the target modules below exist yet
+> `core/`/`benchmarks/` modules. All of the target modules below now exist and are fully implemented
 > (`core/risk.py`, `benchmarks/classical.py`, `benchmarks/oos.py`,
-> `benchmarks/plots.py`, `benchmarks/reports.py`). The previous phase (modular
-> `core/hhl.py`, `core/qipm.py`, `core/socp.py` + Hermitian dilation + raw
-> iterates) is already done and lives on this branch. Treat this file as "next
-> steps to implement/explore," not as a description of current state.
+> `benchmarks/plots.py`, `benchmarks/reports.py`). The notebook has been updated to import
+> and use these modules. Treat this file as a historical record of the roadmap.
 
 Verified against: `research/quantum_ipm_research.ipynb` (37 cells),
 `benchmarks/result_logger.py`, `benchmarks/constraint_check.py`,
