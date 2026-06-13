@@ -11,6 +11,9 @@ import json
 import datetime
 import numpy as np
 
+from benchmarks.oos import compute_oos_benchmark, load_oos_prices_for_period, print_oos_summary
+from benchmarks.plots import plot_oos_comparison
+
 
 def _config_clock_qubits(config: dict, default: int | None = 6):
     """Return the QPE clock-qubit count, accepting old notebook keys."""
@@ -188,7 +191,7 @@ def load_result(path: str) -> dict:
 
 def load_result_by_id(run_id: str, results_dir: str = None) -> dict:
     """
-    Load a saved run-log by its *run_id* (e.g. ``"run_20260511_162804"``).
+    Load a saved run-log by its *run_id*.
 
     This is a convenience wrapper around :func:`load_result` that builds the
     file path from the ``run_id`` string printed by the logging cell, so you
@@ -198,15 +201,18 @@ def load_result_by_id(run_id: str, results_dir: str = None) -> dict:
     ----------
     run_id : str
         The run identifier printed by the notebook after ``log_run``.
-        Accepts both bare IDs (``"run_20260511_162804"``) and full file
-        names (``"run_20260511_162804.json"``).
+        Format: ``"run_<N>ast_<TICKERS>_<N>clockq_<rule>_<YYYYMMDD_HHMMSS>"``.
+        Accepts both bare IDs and full file names (with ``.json`` suffix).
+        Example: ``"run_4ast_AAPL-AMZN-GOOGL-plus_6clockq_paper_20260613_110701"``.
     results_dir : str, optional
         Override the default ``research/results/`` directory.
 
     Example
     -------
         from benchmarks.result_logger import load_result_by_id, run_benchmark_from_result
-        run_benchmark_from_result(load_result_by_id("run_20260511_162804"))
+        run_benchmark_from_result(
+            load_result_by_id("run_4ast_AAPL-AMZN-GOOGL-plus_6clockq_paper_20260613_110701")
+        )
     """
     if results_dir is None:
         results_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "research", "results")
@@ -252,12 +258,6 @@ def run_benchmark_from_result(result: dict) -> None:
         run_benchmark_from_result(load_result("research/results/run_20260511_162804.json"))
     """
     # ------------------------------------------------------------------ #
-    # 0.  Lazy imports so the module stays importable without these deps  #
-    # ------------------------------------------------------------------ #
-    import yfinance as yf            # noqa: PLC0415
-    import matplotlib.pyplot as plt  # noqa: PLC0415
-
-    # ------------------------------------------------------------------ #
     # 1.  Unpack the result dict                                           #
     # ------------------------------------------------------------------ #
     assets = result["config"]["tickers"]
@@ -266,80 +266,37 @@ def run_benchmark_from_result(result: dict) -> None:
     qipm_weights_dict = result["quantum"]["weights"]
 
     # Build ordered numpy arrays that match *assets* order
-    w_star      = np.array([cls_weights_dict[t]  for t in assets])
+    w_star      = np.array([cls_weights_dict.get(t, 0.0) for t in assets])
     w_ipm_final = np.array([qipm_weights_dict[t] for t in assets])
 
-    # Parse OOS period  "YYYY-MM-DD to YYYY-MM-DD"
     test_period = result["out_of_sample"]["test_period"]
-    oos_start, oos_end = [s.strip() for s in test_period.split(" to ")]
 
     # ------------------------------------------------------------------ #
     # 2.  Download OOS price data                                          #
     # ------------------------------------------------------------------ #
     print(f"Downloading unseen OOS data ({test_period}) for Out-of-Sample testing...")
-    raw = yf.download(assets, start=oos_start, end=oos_end, progress=False)
-
-    # yfinance returns a MultiIndex (Price-type × Ticker) for multiple tickers
-    if isinstance(raw.columns, type(raw.columns)) and hasattr(raw.columns, "levels"):
-        test_data = raw["Close"][assets]
-    else:
-        test_data = raw[assets] if set(assets).issubset(raw.columns) else raw
+    test_data = load_oos_prices_for_period(assets, test_period)
 
     # ------------------------------------------------------------------ #
     # 3.  Compute metrics                                                  #
     # ------------------------------------------------------------------ #
-    # Daily portfolio returns
-    daily_returns       = test_data.pct_change().dropna()
-    cls_daily_port_ret  = daily_returns @ w_star
-    qipm_daily_port_ret = daily_returns @ w_ipm_final
-
-    # (a) Cumulative total return
-    asset_cumulative_returns = (test_data.iloc[-1] / test_data.iloc[0]) - 1
-    classical_total_return   = float(np.dot(w_star,      asset_cumulative_returns))
-    quantum_total_return     = float(np.dot(w_ipm_final, asset_cumulative_returns))
-
-    # (b) Annualised Sharpe ratio  (risk-free = 0)
-    ann_factor  = np.sqrt(252)
-    cls_sharpe  = float((cls_daily_port_ret.mean()  * 252) / (cls_daily_port_ret.std()  * ann_factor))
-    qipm_sharpe = float((qipm_daily_port_ret.mean() * 252) / (qipm_daily_port_ret.std() * ann_factor))
-
-    # (c) HHI  (lower = better diversification)
-    cls_hhi  = float(np.sum(w_star      ** 2))
-    qipm_hhi = float(np.sum(w_ipm_final ** 2))
+    metrics = compute_oos_benchmark(
+        test_data,
+        assets,
+        w_star,
+        w_ipm_final,
+        classical_ok=result["classical"].get("success", True),
+    )
 
     # ------------------------------------------------------------------ #
     # 4.  Print summary table                                              #
     # ------------------------------------------------------------------ #
-    print(f"\n{'Metric':<25} | {'Classical':<12} | {'Quantum':<12}")
-    print("-" * 55)
-    print(f"{'Total Return (OOS)':<25} | {classical_total_return:12.2%} | {quantum_total_return:12.2%}")
-    print(f"{'Sharpe Ratio (OOS)':<25} | {cls_sharpe:12.4f} | {qipm_sharpe:12.4f}")
-    print(f"{'HHI (Diversification)':<25} | {cls_hhi:12.4f} | {qipm_hhi:12.4f}")
+    print_oos_summary(metrics, total_return_label="Total Return (OOS)")
 
     # ------------------------------------------------------------------ #
     # 5.  Visualisation                                                    #
     # ------------------------------------------------------------------ #
-    fig, ax = plt.subplots(1, 2, figsize=(14, 5))
-
-    x_indices = np.arange(len(assets))
-    width = 0.35
-
-    # Left panel – weight allocation
-    ax[0].bar(x_indices - width / 2, w_star,      width, label="Classical", color="teal")
-    ax[0].bar(x_indices + width / 2, w_ipm_final, width, label="Quantum",   color="coral")
-    ax[0].set_xticks(x_indices)
-    ax[0].set_xticklabels(assets)
-    ax[0].set_title("Weight Allocation")
-    ax[0].legend()
-
-    # Right panel – cumulative equity curve
-    ax[1].plot((1 + cls_daily_port_ret).cumprod(),  label="Classical", color="teal")
-    ax[1].plot((1 + qipm_daily_port_ret).cumprod(), label="Quantum",   color="coral")
-    ax[1].set_title("OOS Cumulative Equity Curve")
-    ax[1].legend()
-
-    plt.tight_layout()
-    plt.show()
+    plot_oos_comparison(metrics)
 
 
 def validate_result(log_path: str) -> bool:
