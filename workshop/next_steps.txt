@@ -9,7 +9,7 @@ Workshop Next Steps
 [ ] Prep notebook — Run full updated version, then strip solutions before sharing
 [ ] Try To solve tasks alone
 [ ] yesterday's commit inspection
-[ ] How many steps? adaptive step to delete?
+[~] How many steps? adaptive step to delete?  — set n_clk=8 / max_iter=100 (gap→~1.6e-2, ~12 min); adaptive step REMOVED (full short-steps α=1, verified strictly feasible). REVIEW & fine-tune.
 [ ] Research universe — research notebook still all-tech (7 names); add a low-correlation/safe-haven asset (e.g. TLT/GLD) for a true min-variance portfolio (from docs/ideas.txt)
 [X] QIPM wait     — Deeper algo slides for during-run / GPU/TPU? (GPU/TPU not helpful, done)
 [X] Repo cleanup  — Removed .DS_Store + draft scripts; README updated. Apache 2.0 LICENSE added.
