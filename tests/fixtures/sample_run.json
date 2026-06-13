@@ -1,0 +1,40 @@
+{
+  "run_id": "sample_run",
+  "timestamp": "20260613_000000",
+  "config": {
+    "tickers": ["AAA", "BBB"],
+    "train_start": "2024-01-01",
+    "train_end": "2024-12-31",
+    "target_return": 0.15,
+    "max_weight": 0.8,
+    "total_allocation": 1.0
+  },
+  "classical": {
+    "solver": "CVXPY CLARABEL (SOCP IPM)",
+    "status": "optimal",
+    "success": true,
+    "weights": {
+      "AAA": 0.6,
+      "BBB": 0.4
+    },
+    "expected_return": 0.15,
+    "annual_variance": 0.02
+  },
+  "quantum": {
+    "solver": "Quantum IPM (SOCP / HHL Phase Estimation)",
+    "status": "solved",
+    "weights": {
+      "AAA": 0.5,
+      "BBB": 0.5
+    },
+    "expected_return": 0.15,
+    "annual_variance": 0.021,
+    "sum_weights": 1.0,
+    "diagnostics": {}
+  },
+  "out_of_sample": {
+    "test_period": "2025-01-01 to 2025-01-05",
+    "classical_return_pct": 1.0,
+    "quantum_return_pct": 1.2
+  }
+}
