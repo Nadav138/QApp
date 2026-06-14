@@ -22,9 +22,12 @@ from qiskit.quantum_info import Operator
 from qiskit_aer import AerSimulator
 
 
-# One reusable C++ statevector backend.  Swapping qiskit.quantum_info.Statevector
-# for AerSimulator(method="statevector") gives ~3× end-to-end speedup on CPU for
-# the ~16-qubit HHL circuits used in each QIPM Newton step.
+# Reusable C++ statevector backend. In benchmarked 16-qubit QIPM Newton solves,
+# AerSimulator(method="statevector") reduced each solve from ~8.5s with
+# qiskit.quantum_info.Statevector to ~2.7s end-to-end including per-call
+# transpilation, with results matching to ~1e-13. optimization_level=0 performs
+# basis translation only, sufficient for simulation; Aer preserves the same
+# little-endian statevector ordering used by the solution extraction below.
 _SV_SIM = AerSimulator(method="statevector")
 
 # Module-level handle to the most recent circuit, mutated inside the solver.

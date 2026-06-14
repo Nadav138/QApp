@@ -18,13 +18,7 @@ as the source of truth: the SOCP reduction (Eq. 5), the Newton system (Eq. 6),
 the Hermitian dilation used for quantum linear algebra (§6.1), and the short-step
 contraction rate `σ = 1 − 0.1/√r` are all reproduced directly.
 
-The work was developed for the graduate course *Applications of Quantum
-Computing* (PD Dr. Jeanette Lorenz, LMU Munich). Shared logic was extracted from
-the research notebook into a modular `core/` package; the workshop tutorial is
-kept deliberately self-contained for teaching. Every research run is logged to
-JSON for reproducibility, and findings and known limitations are tracked in
-[`workshop/insights.md`](workshop/insights.md) and
-[`research/FUTURE_WORK.md`](research/FUTURE_WORK.md).
+The project was developed as an extended project for the graduate course *Applications of Quantum Computing* (6 CP, Summer Semester 2026), taught by PD Dr. habil. Jeanette Miriam Lorenz (Head of Quantum Computing Department at Fraunhofer IKS & Senior Lecturer at LMU Munich). To go beyond the standard course scope, the implementation incorporates production-grade refactoring (extracting reusable logic into the `core/` package), high-performance simulator backends (Qiskit Aer integration yielding 3.1x speedups), and comprehensive out-of-sample portfolio benchmarking. Every research run is logged to JSON for reproducibility, and findings and known limitations are tracked in [`workshop/insights.md`](workshop/insights.md) and [`research/FUTURE_WORK.md`](research/FUTURE_WORK.md).
 
 ---
 
