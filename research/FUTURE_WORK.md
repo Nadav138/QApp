@@ -1,3 +1,50 @@
+# Future Work
+
+## TODO — Accelerate the HHL solver: `quantum_info.Statevector` → Aer (CPU)
+
+> **Status: not implemented (research path).** The workshop notebook
+> (`workshop/quantum_portfolio_tutorial.ipynb`) has already had this swap applied to its
+> self-contained cell-24 solver. The research notebook imports the solver from `core/`
+> (cell 6: `from core.hhl import quantum_newton_solver`), so it needs the same change made
+> in `core/hhl.py` — deferred to here.
+
+**Why.** Each QIPM Newton step solves a ~16-qubit HHL circuit. Profiling showed ~97% of
+wall-clock sits in `qiskit.quantum_info.Statevector` (the pure-NumPy reference simulator,
+[core/hhl.py:192](../core/hhl.py#L192)) — ~8.5 s/solve, ~127 s for a 15-iteration solve. A
+free Colab GPU does **not** help: that class has no GPU backend, and 16 qubits is well below
+the ~22+ qubit break-even where GPU statevector sim beats CPU.
+
+**The change.** Swap to Qiskit Aer's C++ statevector backend on **CPU**:
+- `requirements.txt`: add `qiskit-aer>=0.17`.
+- [core/hhl.py:16](../core/hhl.py#L16): `from qiskit_aer import AerSimulator`, add `transpile` to
+  the `qiskit` import, and create one module-level `_SV_SIM = AerSimulator(method="statevector")`.
+- [core/hhl.py:192-196](../core/hhl.py#L192-L196): replace `sv = Statevector(qc)` with
+  ```python
+  qc_sv = qc.copy(); qc_sv.save_statevector()
+  sv_data = _SV_SIM.run(transpile(qc_sv, _SV_SIM, optimization_level=0)).result().get_statevector().data
+  raw_data = sv_data[half_dim: half_dim + dim_pad]
+  ```
+  Keep the `half_dim` / `dim_pad` / `sol_off` slicing unchanged — Aer uses the same little-endian
+  ordering. `optimization_level=0` is basis translation only (a simulator needs no routing/gate
+  optimization); the default level roughly doubles per-call transpile time for no benefit. An
+  explicit `transpile` is required — Aer rejects the raw circuit (`unknown instruction: qft_dg`).
+
+**Measured (on the equivalent workshop circuit, qiskit 2.4.1 + qiskit-aer 0.17.2).**
+- Bit-exact: `max|sv_aer − sv_qi| ≈ 3e-13`, so the QIPM convergence trajectory is unchanged.
+- ~2.7 s/solve vs ~8.5 s; 15 solves 40.9 s vs ~127 s → **~3.1× end-to-end**. (The headline
+  sim-only step is ~5.7×, but the per-call `transpile` is unavoidable, so end-to-end is ~3×.)
+
+**Verification when implemented.** (1) Equivalence gate: one circuit through both engines,
+assert `max|sv_aer − sv_qi| < 1e-9`. (2) Run the research notebook QIPM cell; confirm the
+per-iter duality-gap / residual table matches the committed run. (3) Run `tests/`.
+
+**Optional, future.** Make the device switchable —
+`AerSimulator(method="statevector", device=os.getenv("QAPP_SIM_DEVICE", "CPU"))` — so that *if*
+the problem later grows past ~22 qubits, flipping to GPU on Colab becomes a one-env-var change.
+Stay on CPU at today's 16 qubits.
+
+---
+
 # Future Work — Notebook Function Extraction
 
 > **Status: completed / fully implemented on main.** This was the roadmap for the
