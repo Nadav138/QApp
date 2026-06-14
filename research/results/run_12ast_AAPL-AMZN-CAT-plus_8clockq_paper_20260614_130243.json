@@ -1,0 +1,111 @@
+{
+  "run_id": "run_12ast_AAPL-AMZN-CAT-plus_8clockq_paper_20260614_130243",
+  "timestamp": "20260614_130243",
+  "config": {
+    "tickers": [
+      "AAPL",
+      "INTC",
+      "NVDA",
+      "AMZN",
+      "TLT",
+      "JPM",
+      "XOM",
+      "LLY",
+      "CAT",
+      "COST",
+      "GLD",
+      "VNQ"
+    ],
+    "train_start": "2024-01-01",
+    "train_end": "2024-12-31",
+    "target_return": 0.35,
+    "max_weight": 0.3,
+    "total_allocation": 1.0,
+    "quantum_ipm_use_adaptive_step": false,
+    "quantum_ipm_alpha": 0.8,
+    "quantum_ipm_step_rule": "paper",
+    "quantum_qipm_n_clk": 8,
+    "qpe_clock_qubits": 8,
+    "quantum_hhl_n_clk": 8,
+    "quantum_hhl_clock_qubits": 8
+  },
+  "classical": {
+    "solver": "CVXPY CLARABEL (SOCP IPM)",
+    "status": "optimal",
+    "success": true,
+    "weights": {
+      "AAPL": 0.12784754178159957,
+      "INTC": 3.828180194288856e-10,
+      "NVDA": 0.07623679351604937,
+      "AMZN": 2.312433522594192e-07,
+      "TLT": 0.061923815754699386,
+      "JPM": 0.1990577076244533,
+      "XOM": 0.06120939446768837,
+      "LLY": 0.021711498743684703,
+      "CAT": 4.341815989604597e-09,
+      "COST": 0.15201305492630093,
+      "GLD": 0.29999995031248006,
+      "VNQ": 6.905058154678037e-09
+    },
+    "expected_return": 0.3500000000000001,
+    "annual_variance": 0.012503523694186497
+  },
+  "quantum": {
+    "solver": "Quantum IPM (SOCP / HHL Phase Estimation)",
+    "n_clock_qubits": 8,
+    "qpe_clock_qubits": 8,
+    "adaptive_step": false,
+    "step_rule": "paper",
+    "status": "max_iter",
+    "diagnostics": {
+      "sum_w": 1.0182307005113027,
+      "budget_eq": 0.01823070051130271,
+      "return_value": 0.31417013055909976,
+      "target_return": 0.35,
+      "return_eq": -0.03582986944090022,
+      "long_only_min": 0.058803691585554124,
+      "max_weight_cap": 0.17730953599709343,
+      "primal_resid": 0.03582986944090022,
+      "dual_resid": 0.0008465037278231335,
+      "primal_resid_inf": 0.03582986944090022,
+      "dual_resid_inf": 0.0008465037278231335,
+      "duality_gap": 0.23935228028132033,
+      "cone_primal": 0.16443758090580943,
+      "cone_dual": 0.5275300633241697,
+      "cone_margin_primal": 0.058803691585554124,
+      "cone_margin_dual": 0.5275300633241697,
+      "lorentz_margin_primal": 0.16443758090580943,
+      "scalar_margin_primal": 0.058803691585554124,
+      "lorentz_margin_dual": 0.5275300633241697,
+      "scalar_margin_dual": 0.9985964866279178
+    },
+    "raw_weights": true,
+    "sum_weights": 1.0182307005113027,
+    "iterations": 2,
+    "sigma_theory": 0.98,
+    "gap_ratios": [
+      0.9734983762432129
+    ],
+    "weights": {
+      "AAPL": 0.08667951669851326,
+      "INTC": 0.058803691585554124,
+      "NVDA": 0.12269046400290655,
+      "AMZN": 0.08900725301648493,
+      "TLT": 0.07501501271653362,
+      "JPM": 0.08839855595931456,
+      "XOM": 0.07906883035180028,
+      "LLY": 0.08552199853049457,
+      "CAT": 0.08351780662965813,
+      "COST": 0.08793077716602979,
+      "GLD": 0.08413565532269927,
+      "VNQ": 0.07746113853131356
+    },
+    "expected_return": 0.31417013055909976,
+    "annual_variance": 0.021947928483625548
+  },
+  "out_of_sample": {
+    "test_period": "2025-01-01 to 2025-12-31",
+    "classical_return_pct": 32.09302332358228,
+    "quantum_return_pct": 29.865418827746744
+  }
+}
