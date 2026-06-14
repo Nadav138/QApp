@@ -184,6 +184,7 @@ def run_socp_quantum_ipm(
     use_phase1=True,
     residual_tol=1e-5,
     return_result=False,
+    optimization_level=0,
 ):
     """
     Quantum Interior-Point Method for the Markowitz SOCP.
@@ -195,6 +196,9 @@ def run_socp_quantum_ipm(
     ``n_clk`` is the low-level HHL name for the number of QPE clock-register
     qubits used in each Newton-system solve. Research notebook configs expose
     this as ``quantum_qipm_n_clk`` to distinguish it from plain HHL demos.
+
+    ``optimization_level`` specifies the transpilation level (0-3) for the
+    underlying HHL circuit. Default is 0 (fast simulation).
     """
     mu_vec = np.asarray(mu_vec, dtype=float)
     M_mat = np.asarray(M_mat, dtype=float)
@@ -250,6 +254,7 @@ def run_socp_quantum_ipm(
             n_clk=n_clk,
             pad_eig=pad_eig,
             return_diagnostics=True,
+            optimization_level=optimization_level,
         )
         hhl_diagnostics.append(hhl_info)
         dx = dz[:n_vars]

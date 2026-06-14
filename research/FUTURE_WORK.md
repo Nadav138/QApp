@@ -2,11 +2,14 @@
 
 ## TODO — Accelerate the HHL solver: `quantum_info.Statevector` → Aer (CPU)
 
-> **Status: not implemented (research path).** The workshop notebook
-> (`workshop/quantum_portfolio_tutorial.ipynb`) has already had this swap applied to its
-> self-contained cell-24 solver. The research notebook imports the solver from `core/`
-> (cell 6: `from core.hhl import quantum_newton_solver`), so it needs the same change made
-> in `core/hhl.py` — deferred to here.
+> **Status: completed / fully implemented on main.** The `core/hhl.py` solver
+> now uses `qiskit_aer.AerSimulator(method="statevector")` on CPU instead of
+> `qiskit.quantum_info.Statevector`. The research notebook imports the solver
+> from `core/` (cell 6: `from core.hhl import quantum_newton_solver`) and
+> inherits the speedup automatically. An `optimization_level` parameter
+> (default 0) is exposed in both `quantum_newton_solver` and `run_socp_quantum_ipm`
+> and configured in the research notebook to allow control over transpilation level
+> during simulation or hardware runs. Equivalence tests are in `tests/test_hhl_aer.py`.
 
 **Why.** Each QIPM Newton step solves a ~16-qubit HHL circuit. Profiling showed ~97% of
 wall-clock sits in `qiskit.quantum_info.Statevector` (the pure-NumPy reference simulator,
