@@ -14,15 +14,15 @@ from pathlib import Path
 NOTEBOOK = Path(__file__).parent.parent / "quantum_portfolio_tutorial.ipynb"
 
 SOLUTIONS = {
-    # Task 1 — identified by the '# TODO (1)' marker for n_clk_demo
-    "n_clk_demo = ...": (
+    # Task 1
+    "# TODO (1): read the number of clock qubits from CONFIG": (
         "# Equality-only KKT:  K = [[2Σ, Aᵀ], [A, 0]],  rhs = [0,…,0, 1, target_return]\n"
         "H_eq   = 2 * cov_mat\n"
         "A_eq   = np.vstack([np.ones((1, n)), mu_vec.reshape(1, n)])      # budget, return\n"
         "K_eq   = np.block([[H_eq, A_eq.T], [A_eq, np.zeros((2, 2))]])\n"
         'rhs_eq = np.concatenate([np.zeros(n), [1.0, CONFIG["target_return"]]])\n\n'
         "# TODO (1): read the number of clock qubits from CONFIG\n"
-        'n_clk_demo = CONFIG["quantum_hhl_demo_n_clk"]\n\n'
+        'n_clk_demo = CONFIG["quantum_hhl_n_clk"]\n\n'
         "n_sys_demo = int(np.ceil(np.log2(K_eq.shape[0])))\n"
         'print(f"Equality-only KKT: {K_eq.shape[0]}×{K_eq.shape[1]}")\n'
         'print(f"Circuit registers: sys={n_sys_demo} qubits | clk={n_clk_demo} qubits | anc=1 qubit")\n'
@@ -33,11 +33,11 @@ SOLUTIONS = {
         '                                   pad_eig=CONFIG["quantum_hhl_pad_eig"])\n'
         "w_hhl_raw = dz_hhl[:n]\n\n"
         'print(f"Circuit depth: {last_qc.depth()} | gates: {last_qc.size()}")\n\n'
-        "# TODO (2): draw the most recent HHL circuit (style='iqp', fold=40)\n"
-        "last_qc.draw('mpl', style='iqp', fold=40)\n"
+        "# TODO (2): draw the most recent HHL circuit (style='iqp', fold=1)\n"
+        "last_qc.draw('mpl', style='iqp', fold=1)\n"
     ),
-    # Task 2 — identified by 'ret_qipm = ...'
-    "ret_qipm = ...": (
+    # Task 2
+    "# TODO: compute the QIPM portfolio's return, variance, and volatility": (
         "# TODO: compute the QIPM portfolio's return, variance, and volatility\n"
         "ret_qipm = float(w_qipm @ mu_vec)\n"
         "var_qipm = float(w_qipm @ cov_mat @ w_qipm)\n"
@@ -47,8 +47,8 @@ SOLUTIONS = {
         'print(f"   Annual variance  : {var_qipm:.4f}")\n'
         'print(f"   Annual volatility: {std_qipm:.2%}")\n'
     ),
-    # Task 3 — identified by 'test_start = ...'
-    "test_start = ...": (
+    # Task 3
+    "# TODO: choose the out-of-sample test period (full calendar year after training)": (
         'print("Downloading OOS data…")\n\n'
         "# TODO: choose the out-of-sample test period (full calendar year after training)\n"
         'test_start = "2025-01-01"\n'

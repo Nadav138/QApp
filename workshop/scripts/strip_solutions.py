@@ -14,8 +14,8 @@ from pathlib import Path
 NOTEBOOK = Path(__file__).parent.parent / "quantum_portfolio_tutorial.ipynb"
 
 SKELETONS = {
-    # Task 1 — identified by the filled n_clk_demo assignment
-    'n_clk_demo = CONFIG["quantum_hhl_demo_n_clk"]': (
+    # Task 1
+    "# TODO (1): read the number of clock qubits from CONFIG": (
         "# Equality-only KKT:  K = [[2Σ, Aᵀ], [A, 0]],  rhs = [0,…,0, 1, target_return]\n"
         "H_eq   = 2 * cov_mat\n"
         "A_eq   = np.vstack([np.ones((1, n)), mu_vec.reshape(1, n)])      # budget, return\n"
@@ -33,11 +33,11 @@ SKELETONS = {
         '                                   pad_eig=CONFIG["quantum_hhl_pad_eig"])\n'
         "w_hhl_raw = dz_hhl[:n]\n\n"
         'print(f"Circuit depth: {last_qc.depth()} | gates: {last_qc.size()}")\n\n'
-        "# TODO (2): draw the most recent HHL circuit (style='iqp', fold=40)\n"
+        "# TODO (2): draw the most recent HHL circuit (style='iqp', fold=1)\n"
         "...\n"
     ),
-    # Task 2 — identified by the filled ret_qipm assignment
-    "ret_qipm = float(w_qipm @ mu_vec)": (
+    # Task 2
+    "# TODO: compute the QIPM portfolio's return, variance, and volatility": (
         "# TODO: compute the QIPM portfolio's return, variance, and volatility\n"
         "ret_qipm = ...\n"
         "var_qipm = ...\n"
@@ -47,8 +47,8 @@ SKELETONS = {
         'print(f"   Annual variance  : {var_qipm:.4f}")\n'
         'print(f"   Annual volatility: {std_qipm:.2%}")\n'
     ),
-    # Task 3 — identified by the filled test_start date
-    'test_start = "2025-01-01"': (
+    # Task 3
+    "# TODO: choose the out-of-sample test period (full calendar year after training)": (
         'print("Downloading OOS data…")\n\n'
         "# TODO: choose the out-of-sample test period (full calendar year after training)\n"
         "test_start = ...\n"
