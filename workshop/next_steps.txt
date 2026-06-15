@@ -1,16 +1,10 @@
 Workshop Next Steps
 ===================
 
-[~] Slides        — Read IPM/QIPM parts in the paper: understand deeper
-[~] Slides        — Polish & verify content (consider 2-3 extra slides for while the code runs)
-[~] Dry run       — Time full notebook + Task 1 live-coding
-[ ] Overtime plan — Decide: pre-fill Tasks 2 & 3, or homework
-[ ] Colab test    — Final version colab test before publishing
-[ ] Prep notebook — Run full updated version, then strip solutions before sharing
-[ ] Try To solve tasks alone
-[ ] yesterday's commit inspection
-[~] How many steps? adaptive step to delete?  — set n_clk=8 / max_iter=100 (gap→~1.6e-2, ~12 min); adaptive step REMOVED (full short-steps α=1, verified strictly feasible). REVIEW & fine-tune.
-[ ] Research universe — research notebook still all-tech (7 names); add a low-correlation/safe-haven asset (e.g. TLT/GLD) for a true min-variance portfolio (from docs/ideas.txt)
+[X] Colab test    — Work but slower
+[X] Prep notebook — Run full updated version, then strip solutions before sharing - Done
+[X] How many steps? adaptive step to delete?  — set n_clk=8 / max_iter=100 (gap→~1.6e-2, ~12 min); adaptive step REMOVED (full short-steps α=1, verified strictly feasible). REVIEW & fine-tune.
+[X] Research universe — research notebook still all-tech (7 names); add a low-correlation/safe-haven asset (e.g. TLT/GLD) for a true min-variance portfolio (from docs/ideas.txt)
 [X] QIPM wait     — Deeper algo slides for during-run / GPU/TPU? (GPU/TPU not helpful, done)
 [X] Repo cleanup  — Removed .DS_Store + draft scripts; README updated. Apache 2.0 LICENSE added.
 [X] Colab badge   — Added "Open in Colab" badge to README (workshop tutorial)
