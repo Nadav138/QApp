@@ -1,8 +1,8 @@
 # Quantum Interior-Point Portfolio Optimization
 
 A **Quantum Interior-Point Method (IPM)** for constrained Markowitz portfolio
-optimization, implemented after *Kerenidis, Prakash & Szilágyi (2019),
-"Quantum Algorithms for Portfolio Optimization"*. The repository pairs a
+optimization, implemented after [*Kerenidis, Prakash & Szilágyi (2019),
+"Quantum Algorithms for Portfolio Optimization"*](https://arxiv.org/abs/1908.08040). The repository pairs a
 production-grade research notebook with a self-contained educational tutorial,
 backed by a small set of reusable quantum building blocks.
 
@@ -158,6 +158,6 @@ print(df[["run_id", "n_clk", "cls_oos_pct", "quantum_oos_pct", "oos_gap_pct"]])
 
 ## References
 
-- Kerenidis, Prakash & Szilágyi (2019) — *"Quantum Algorithms for Portfolio Optimization"* (arXiv:1908.08040; ACM AFT 2019)
+- Kerenidis, Prakash & Szilágyi (2019) — [*"Quantum Algorithms for Portfolio Optimization"*](https://arxiv.org/abs/1908.08040) ([arXiv:1908.08040](https://arxiv.org/abs/1908.08040); ACM AFT 2019)
 - Harrow, Hassidim & Lloyd (2009) — *"Quantum Algorithm for Linear Systems of Equations"*
 - Boyd & Vandenberghe — *"Convex Optimization"*
