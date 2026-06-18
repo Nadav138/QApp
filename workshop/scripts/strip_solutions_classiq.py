@@ -4,6 +4,10 @@ strip_solutions_classiq.py
 Restores the three task cells in classiq_quantum_portfolio_tutorial.ipynb to
 their student skeleton form (replaces filled-in solutions with `...` placeholders).
 
+Markers are the `# TODO` comments that are present in BOTH the skeleton and the
+solution, so strip and fill are idempotent and order-independent (mirrors the
+Qiskit source-of-truth strip_solutions.py).
+
 Usage:
     python workshop/scripts/strip_solutions_classiq.py
 """
@@ -14,8 +18,8 @@ from pathlib import Path
 NOTEBOOK = Path(__file__).parent.parent / "classiq_quantum_portfolio_tutorial.ipynb"
 
 SKELETONS = {
-    # Task 1 — identified by the filled n_clk_demo assignment
-    'n_clk_demo = CONFIG["quantum_hhl_n_clk"]': (
+    # Task 1
+    "# TODO (1): read the number of clock qubits from CONFIG": (
         "# Equality-only KKT:  K = [[2Σ, Aᵀ], [A, 0]],  rhs = [0,…,0, 1, target_return]\n"
         "H_eq   = 2 * cov_mat\n"
         "A_eq   = np.vstack([np.ones((1, n)), mu_vec.reshape(1, n)])      # budget, return\n"
@@ -38,8 +42,8 @@ SKELETONS = {
         "# TODO (2): visualise the most recent Classiq HHL program (hint: show())\n"
         "...\n"
     ),
-    # Task 2 — identified by the filled ret_qipm assignment
-    "ret_qipm = float(w_qipm @ mu_vec)": (
+    # Task 2
+    "# TODO: compute the QIPM portfolio's return, variance, and volatility": (
         "# TODO: compute the QIPM portfolio's return, variance, and volatility\n"
         "ret_qipm = ...\n"
         "var_qipm = ...\n"
@@ -49,8 +53,8 @@ SKELETONS = {
         'print(f"   Annual variance  : {var_qipm:.4f}")\n'
         'print(f"   Annual volatility: {std_qipm:.2%}")\n'
     ),
-    # Task 3 — identified by the filled test_start date
-    'test_start = "2025-01-01"': (
+    # Task 3
+    "# TODO: choose the out-of-sample test period (full calendar year after training)": (
         'print("Downloading OOS data…")\n\n'
         "# TODO: choose the out-of-sample test period (full calendar year after training)\n"
         "test_start = ...\n"
@@ -86,12 +90,13 @@ def strip(nb_path: Path = NOTEBOOK) -> None:
         src = "".join(cell["source"])
         for marker, skeleton in SKELETONS.items():
             if marker in src:
-                cell["source"] = [skeleton]
+                cell["source"] = skeleton.splitlines(keepends=True)
                 patched += 1
                 break
 
     with open(nb_path, "w") as f:
-        json.dump(nb, f, indent=1)
+        json.dump(nb, f, indent=1, ensure_ascii=False)
+        f.write("\n")
 
     print(f"✅  Stripped {patched}/{len(SKELETONS)} task cells in {nb_path.name}")
 
