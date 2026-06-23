@@ -161,3 +161,9 @@ print(df[["run_id", "n_clk", "cls_oos_pct", "quantum_oos_pct", "oos_gap_pct"]])
 - Kerenidis, Prakash & Szilágyi (2019) — [*"Quantum Algorithms for Portfolio Optimization"*](https://arxiv.org/abs/1908.08040) ([arXiv:1908.08040](https://arxiv.org/abs/1908.08040); ACM AFT 2019)
 - Harrow, Hassidim & Lloyd (2009) — *"Quantum Algorithm for Linear Systems of Equations"*
 - Boyd & Vandenberghe — *"Convex Optimization"*
+
+---
+
+## Disclaimer
+
+This repository is for educational and research purposes only. Nothing contained in this project constitutes financial, investment, legal, or tax advice. The code and analysis are provided "as is" without any warranty. Any investment decisions made based on information or code in this repository are solely at your own risk.
