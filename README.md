@@ -159,7 +159,7 @@ print(df[["run_id", "n_clk", "cls_oos_pct", "quantum_oos_pct", "oos_gap_pct"]])
 ## References
 
 - Kerenidis, Prakash & Szilágyi (2019) — [*"Quantum Algorithms for Portfolio Optimization"*](https://arxiv.org/abs/1908.08040) ([arXiv:1908.08040](https://arxiv.org/abs/1908.08040); ACM AFT 2019)
-- Harrow, Hassidim & Lloyd (2009) — *"Quantum Algorithm for Linear Systems of Equations"*
+- Harrow, Hassidim & Lloyd (2009) — [*"Quantum Algorithm for Linear Systems of Equations"*](https://arxiv.org/abs/0811.3171) ([arXiv:0811.3171](https://arxiv.org/abs/0811.3171); Phys. Rev. Lett. 103, 150502)
 - Boyd & Vandenberghe — *"Convex Optimization"*
 
 ---
